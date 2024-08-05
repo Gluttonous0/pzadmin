@@ -23,5 +23,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*.vue", "src/**/*.ts", "src/**/*.tsx"]
+  "include": ["src/**/*.vue", "src/**/*.ts", "src/**/*.tsx", "auto-imports.d.ts"]
 }
