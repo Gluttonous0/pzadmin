@@ -17,6 +17,7 @@
 
 <script setup lang="ts">
 export interface asideTrees {
+  name?: string
   children?: []
   path: string
   component: any

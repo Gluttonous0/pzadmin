@@ -3,11 +3,16 @@
     <div class="nav-left flex-box">
       <el-icon class="icon" size="20" @click="store.commit('collapseMenu')"><Fold /></el-icon>
       <ul class="flex-box" :style="{ height: '100%' }">
-        <li class="tab flex-box" v-for="(item, index) in selectMenu" :key="item.path">
+        <li
+          class="tab flex-box"
+          v-for="(item, index) in selectMenu"
+          :key="item.path"
+          :class="{ selected: route.path === item.path }"
+        >
           <router-link class="text" :to="{ path: item.path }">
-            <el-icon size="12"><component :is="item.icon" /></el-icon>{{ item.name }}</router-link
-          >
-          <el-icon class="icon-close" size="12"><Close /></el-icon>
+            <el-icon size="12"><component :is="item.icon" /></el-icon>{{ item.name }}
+          </router-link>
+          <el-icon @click="closeTab(item, index)" class="icon-close" size="12"><Close /></el-icon>
         </li>
       </ul>
     </div>
@@ -19,7 +24,7 @@
         </div>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>退出</el-dropdown-item>
+            <el-dropdown-item @click="exitLogin">退出</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -29,13 +34,48 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { asideTrees } from './Aside.vue'
+
+//获取路由实例
+const route = useRoute()
+const router = useRouter()
 
 //获取store实例
 const store = useStore()
 const selectMenu = computed(() => {
   return store.state.menu.selectMenu
 })
+
+//点击关闭tab
+const closeTab = (item: asideTrees, index: number) => {
+  console.log('before', index)
+
+  store.commit('closeTab', item)
+  //非当前页面tag
+  if (item.path !== route.path) {
+    return
+  }
+
+  //删除最后一项
+  const selectMenuData = selectMenu.value
+  if (index === selectMenuData.length) {
+    //tag只有一个
+    if (!selectMenuData.length) {
+      router.push('/')
+    } else {
+      router.push({ path: selectMenuData[index - 1].path })
+    }
+  } else {
+    router.push({ path: selectMenuData[index].path })
+  }
+}
+
+//退出登录跳转
+const exitLogin = () => {
+  router.push('/login')
+}
 </script>
 
 <style scoped lang="less">
@@ -69,6 +109,15 @@ const selectMenu = computed(() => {
       .text {
         margin: 0 5px;
         color: #000;
+      }
+      &.selected {
+        a {
+          color: #409eff;
+        }
+        i {
+          color: #409eff;
+        }
+        background-color: #f5f5f5;
       }
     }
     .tab:hover {

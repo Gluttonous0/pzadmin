@@ -18,6 +18,11 @@ const mutations = {
     if (state.selectMenu.findIndex(items => items.path === item.path) === -1) {
       state.selectMenu.push(item)
     }
+  },
+  closeTab(state: stateProps, item: asideTrees) {
+    console.log(item)
+    const index = state.selectMenu.findIndex(items => items.name === item.name)
+    state.selectMenu.splice(index, 1)
   }
 }
 
