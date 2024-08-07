@@ -4,6 +4,19 @@ export interface Result<T = any> {
   data: T
   msg: string
 }
+
+//分页类型
+export interface Pagination {
+  pageNum: string
+  pageSize: string
+}
+
+//分页返回结果
+export interface Results<T = any> {
+  list: [T]
+  total: number
+}
+
 //登录
 export namespace Login {
   export interface CreateParams {
@@ -19,14 +32,20 @@ export namespace Login {
 export namespace Menu {
   export interface MenuSelectItem {
     id: number
-    name: string
+    label: string
+    children?: MenuSelectItem[]
+    disabled: boolean
   }
 
   export interface CreateParams {
-    userName: string
-    passWord: string
+    name: string
+    permissions: string
+    id: string
   }
-  export interface Authentication extends CreateParams {
-    validCode: string
+  export interface MenuList {
+    id: number
+    name: string
+    permission: []
+    permissionName: string
   }
 }
