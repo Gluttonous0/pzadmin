@@ -10,6 +10,7 @@ router.beforeEach(to => {
   const token = stores.get('token')
   //非登录页面判断
   if (!token && to.path !== '/login') {
+    ElMessage.error('登录过期,请重新登陆')
     return '/login'
   } else if (token && to.path === '/login') {
     return '/'

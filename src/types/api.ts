@@ -6,11 +6,27 @@ export interface Result<T = any> {
 }
 //登录
 export namespace Login {
-  export interface Params {
+  export interface CreateParams {
     userName: string
     passWord: string
   }
-  export interface Authentication extends Params {
+  export interface Authentication extends CreateParams {
+    validCode: string
+  }
+}
+
+//菜单管理
+export namespace Menu {
+  export interface MenuSelectItem {
+    id: number
+    name: string
+  }
+
+  export interface CreateParams {
+    userName: string
+    passWord: string
+  }
+  export interface Authentication extends CreateParams {
     validCode: string
   }
 }

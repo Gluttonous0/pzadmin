@@ -14,5 +14,7 @@ module.exports = {
   //对象、数组括号与文字间添加空格
   bracketSpacing: true,
   //尾随逗号
-  trailingComma: 'none'
+  trailingComma: 'none',
+  //vue脚本缩进
+  vueIndentScriptAndStyle:true
 }

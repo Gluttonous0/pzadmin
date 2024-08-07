@@ -19,8 +19,11 @@
     <div class="nav-right">
       <el-dropdown>
         <div class="el-dropdown-link flex-box">
-          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" class="nav-avatar" />
-          <p style="margin: 0 10px">Admin</p>
+          <el-avatar
+            :src="userInfo.avatar || 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'"
+            class="nav-avatar"
+          />
+          <p style="margin: 0 10px">{{ userInfo.name || 'Admin' }}</p>
         </div>
         <template #dropdown>
           <el-dropdown-menu>
@@ -37,6 +40,7 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { asideTrees } from './Aside.vue'
+import { default as stores } from '../utils/stroage.ts'
 
 //获取路由实例
 const route = useRoute()
@@ -47,6 +51,9 @@ const store = useStore()
 const selectMenu = computed(() => {
   return store.state.menu.selectMenu
 })
+
+//获取用户登录信息缓存
+const userInfo = stores.get('userInfo')
 
 //点击关闭tab
 const closeTab = (item: asideTrees, index: number) => {
@@ -74,6 +81,8 @@ const closeTab = (item: asideTrees, index: number) => {
 
 //退出登录跳转
 const exitLogin = () => {
+  stores.remove('token')
+  stores.remove('userInfo')
   router.push('/login')
 }
 </script>

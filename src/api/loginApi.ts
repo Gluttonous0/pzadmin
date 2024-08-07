@@ -11,7 +11,7 @@ const api = {
     return request.post('/user/authentication', params)
   },
   //登录接口
-  loginIn(params: Login.Params) {
+  loginIn(params: Login.CreateParams) {
     return request.post('/login', params)
   }
 }
