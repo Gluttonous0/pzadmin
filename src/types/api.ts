@@ -7,8 +7,8 @@ export interface Result<T = any> {
 
 //分页类型
 export interface Pagination {
-  pageNum: string
-  pageSize: string
+  pageNum: number
+  pageSize: number
 }
 
 //分页返回结果

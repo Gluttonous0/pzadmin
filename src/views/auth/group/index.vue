@@ -6,7 +6,7 @@
     </div>
     <div class="group-content">
       <el-button type="primary" @click="visible = true">+增加</el-button>
-      <el-dialog v-model="visible" title="添加权限" width="500">
+      <el-dialog v-model="visible" title="添加权限" width="500" @close="closeVisible(instanceForm)">
         <el-form ref="instanceForm" :rules="rules" :model="form" label-width="100px" label-position="left">
           <el-form-item prop="id" v-show="false">
             <el-input v-model="form.id" />
@@ -45,11 +45,14 @@
       </el-table>
       <div style="padding: 10px 25px">
         <el-pagination
+          v-model:currentPage="page.pageNum"
+          :page-size="page.pageSize"
           background
           layout="prev, pager, next"
           :total="tableData.total"
           class="mt-4"
           style="justify-content: right"
+          @current-change="handleCurrentChange"
         />
       </div>
     </div>
@@ -89,20 +92,24 @@
   //获取树形表单实例
   const treeRef = ref()
 
-  const defaultKeys = ref([4, 5])
+  const defaultKeys = [4, 5]
 
   //获取权限列表
   const getMenuSelect = async () => {
     const data = await api.getMenuSelect()
     permissionsList.value = data
-    console.log(data)
   }
 
   //分页默认设置
   const page = reactive<Pagination>({
-    pageNum: '1',
-    pageSize: '10'
+    pageNum: 1,
+    pageSize: 10
   })
+
+  const handleCurrentChange = (val: any) => {
+    page.pageNum = val
+    getMenuList()
+  }
 
   //获取表格数据
   const tableData = reactive({
@@ -122,6 +129,7 @@
     if (!formEl) return
     visible.value = false
     formEl.resetFields()
+    treeRef.value.setCheckedKeys(defaultKeys)
   }
 
   //提交表单
@@ -130,10 +138,11 @@
     await formEl.validate((valid, fields) => {
       if (valid) {
         const permissionsMenu = JSON.stringify(treeRef.value.getCheckedKeys())
-        api.updatePermissions({ ...form, permissions: permissionsMenu })
-        ElMessage.success('操作成功')
-        closeVisible(instanceForm.value)
-        getMenuList()
+        api.updatePermissions({ ...form, permissions: permissionsMenu }).then(() => {
+          ElMessage.success('操作成功')
+          closeVisible(instanceForm.value)
+          getMenuList()
+        })
       } else {
         console.log(fields)
       }
@@ -142,6 +151,7 @@
 
   //编辑表单
   const handleClick = (data: any) => {
+    console.log(data)
     visible.value = true
     nextTick(() => {
       Object.assign(form, { id: data.id, name: data.name })
