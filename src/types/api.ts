@@ -49,3 +49,19 @@ export namespace Menu {
     permissionName: string
   }
 }
+
+//账号管理
+export namespace User {
+  export interface Params {
+    active: number
+    create_time: number
+    id: number
+    mobile: string
+    name: string
+    permissions_id: number
+  }
+  export interface UserSelect {
+    id: string
+    name: string
+  }
+}

@@ -1,9 +1,9 @@
 <template>
   <div class="group-container">
-    <div class="group-header">
-      <h3>菜单管理</h3>
-      <p>菜单规则通常对应一个控制器的方法,同时菜单栏数据也从规则中获取</p>
-    </div>
+    <PanelHead>
+      <template #header>菜单管理</template>
+      <template #content>菜单规则通常对应一个控制器的方法,同时菜单栏数据也从规则中获取</template>
+    </PanelHead>
     <div class="group-content">
       <el-button type="primary" @click="visible = true">+增加</el-button>
       <el-dialog v-model="visible" title="添加权限" width="500" @close="closeVisible(instanceForm)">
@@ -163,12 +163,6 @@
 <style lang="less" scoped>
   .group-container {
     margin: 10px;
-    .group-header {
-      font-size: 12px;
-      padding: 10px;
-      background-color: #c9cdd0;
-      border-radius: 5px;
-    }
     .group-content {
       padding: 10px;
       background-color: #fff;

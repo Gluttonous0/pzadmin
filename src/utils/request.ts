@@ -36,7 +36,6 @@ http.interceptors.response.use(
     if (data.code === -2) {
       store.remove('token')
       store.remove('userInfo')
-      ElMessage.error('登录过期,请重新登陆')
       window.location.href = window.location.origin + '/'
     }
     if (data.data.token) {
