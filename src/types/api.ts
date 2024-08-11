@@ -64,4 +64,8 @@ export namespace User {
     id: string
     name: string
   }
+  export interface updateParams {
+    permissions_id: number
+    name: string
+  }
 }

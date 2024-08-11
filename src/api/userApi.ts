@@ -9,6 +9,10 @@ const api = {
   //获取角色列表
   getSelectAdmin() {
     return request.get<User.UserSelect[]>('/menu/selectlist')
+  },
+  //账号修改
+  updateAdmin(params: User.updateParams) {
+    return request.post('/update/user', params)
   }
 }
 export default api

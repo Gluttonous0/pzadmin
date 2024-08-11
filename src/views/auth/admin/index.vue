@@ -6,43 +6,41 @@
     </PanelHead>
     <div class="group-content">
       <!-- <el-button type="primary" @click="visible = true">+增加</el-button> -->
+
       <!-- dialog弹窗start -->
-      <!-- <el-dialog v-model="visible" title="添加权限" width="500" @close="closeVisible(instanceForm)">
+      <el-dialog v-model="visible" title="编辑用户" width="500" @close="closeVisible()">
         <el-form ref="instanceForm" :rules="rules" :model="form" label-width="100px" label-position="left">
           <el-form-item prop="id" v-show="false">
             <el-input v-model="form.id" />
           </el-form-item>
-          <el-form-item label="名称" prop="name">
-            <el-input v-model="form.name" placeholder="请填写权限名称" />
+          <el-form-item label="手机号" prop="mobile">
+            <el-input v-model="form.mobile" placeholder="请填写手机号" disabled />
           </el-form-item>
-          <el-form-item label="权限" prop="permissions">
-            <el-tree
-              ref="treeRef"
-              :data="permissionsList"
-              show-checkbox
-              node-key="id"
-              style="max-width: 600px"
-              :default-checked-keys="defaultKeys"
-              :default-expanded-keys="[2]"
-            />
+          <el-form-item label="昵称" prop="name">
+            <el-input v-model="form.name" placeholder="请输入昵称" />
+          </el-form-item>
+          <el-form-item label="菜单权限" prop="permissions_id">
+            <el-select v-model="form.permissions_id" :placeholder="adminName(form.permissions_id)">
+              <el-option v-for="item in admins" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
           </el-form-item>
         </el-form>
         <template #footer>
           <div class="dialog-footer">
-            <el-button @click="$emit('visibleChange', closeVisible(instanceForm))">取消</el-button>
+            <el-button @click="$emit('visibleChange', closeVisible())">取消</el-button>
             <el-button type="primary" @click="innerVisible(instanceForm)">确定</el-button>
           </div>
         </template>
-      </el-dialog> -->
+      </el-dialog>
       <!-- dialog弹窗end -->
 
       <!-- table列表start -->
       <el-table :data="tableData.list" stripe style="width: 100%">
         <el-table-column prop="id" label="id" width="100" />
         <el-table-column prop="name" label="昵称" width="180" />
-        <el-table-column prop="permissions_id" label="所属组别">
+        <el-table-column prop="permissions_id" label="所属组别" width="180">
           <template #default="scope">
-            {{ admins?.filter(item => item.id === scope.row.permissions_id)[0].name }}
+            {{ adminName(scope.row.permissions_id) }}
           </template>
         </el-table-column>
         <el-table-column prop="mobile" label="手机号" width="180" />
@@ -61,8 +59,7 @@
         </el-table-column>
         <el-table-column label="操作" width="180">
           <template #default="scoped">
-            <el-button link type="primary">编辑</el-button>
-            <!-- @click="handleClick(scoped.row)" -->
+            <el-button link type="primary" @click="handleVisible(scoped.row)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -88,9 +85,10 @@
 
 <script setup lang="ts">
   import { nextTick, onMounted, reactive, ref } from 'vue'
-  import { Menu, Pagination, User } from '../../../types/api'
+  import { Pagination, User } from '../../../types/api'
   import api from '../../../api/userApi'
   import { formatData } from '../../../utils'
+  import { FormInstance, FormRules } from 'element-plus'
 
   onMounted(() => {
     getAdminList()
@@ -103,18 +101,29 @@
     tableData.list = data.list
     tableData.total = data.total
   }
-  const tableData = reactive({
-    list: <User.Params[]>[],
-    total: <number>0
-  })
 
   //获取权限列表
   const getSelectAdmin = async () => {
     admins.value = await api.getSelectAdmin()
   }
+
   const admins = ref<User.UserSelect[]>()
 
-  //pagination
+  //角色身份转换方法
+  const adminName = (scope: any) => {
+    if (!scope) return
+    debugger
+    return admins.value?.filter(item => item.id === scope)[0].name
+  }
+
+  //table-------------
+  //表单列表
+  const tableData = reactive({
+    list: <User.Params[]>[],
+    total: <number>0
+  })
+
+  //pagination-------------
   //page分页默认设置
   const page = reactive<Pagination>({
     pageNum: 1,
@@ -127,21 +136,59 @@
     getAdminList()
   }
 
-  // //新增弹窗开关
-  // const visible = ref(false)
+  //dialog-------------
+  //弹窗开关
+  const visible = ref(false)
 
-  // //表单form数据
-  // const form = reactive({
-  //   name: '',
-  //   permissions: '',
-  //   id: ''
-  // })
-  // //创建表单实例
-  // const instanceForm = ref<FormInstance>()
-  // //表单校验规则
-  // const rules = reactive<FormRules>({
-  //   name: [{ required: true, trigger: 'blur', message: '请输入权限名称' }]
-  // })
+  //打开弹窗
+  const handleVisible = (val: User.Params) => {
+    visible.value = true
+    console.log(val)
+    nextTick(() => {
+      Object.assign(form, { id: val.id, name: val.name, mobile: val.mobile, permissions_id: val.permissions_id })
+    })
+  }
+
+  //form表单
+  const form = reactive({
+    mobile: '',
+    name: '',
+    permissions_id: 0,
+    id: ''
+  })
+
+  //关闭弹窗
+  const closeVisible = (formEl?: FormInstance) => {
+    visible.value = false
+    if (!formEl) return
+    formEl.resetFields()
+  }
+
+  //创建表单实例
+  const instanceForm = ref<FormInstance>()
+
+  //表单校验规则
+  const rules = reactive<FormRules>({
+    name: [{ required: true, trigger: 'blur', message: '请输入权限名称' }],
+    permissions_id: [{ required: true, trigger: 'blur', message: '请输入选择权限' }]
+  })
+
+  //提交表单
+  const innerVisible = async (formEl?: FormInstance) => {
+    if (!formEl) return
+    await formEl.validate((valid, fields) => {
+      if (valid) {
+        const { name, permissions_id } = form
+        api.updateAdmin({ name, permissions_id }).then(() => {
+          ElMessage.success('操作成功')
+          closeVisible()
+          getAdminList()
+        })
+      } else {
+        console.log(fields)
+      }
+    })
+  }
 
   // //表单权限列表
   // const permissionsList = ref<Menu.MenuSelectItem[]>([])
@@ -150,26 +197,6 @@
   // const treeRef = ref()
 
   // const defaultKeys = [4, 5]
-
-  // //关闭弹窗
-  // const closeVisible = (formEl?: FormInstance) => {
-  //   if (!formEl) return
-  //   visible.value = false
-  //   formEl.resetFields()
-  //   treeRef.value.setCheckedKeys(defaultKeys)
-  // }
-
-  // //提交表单
-  // const innerVisible = async (formEl?: FormInstance) => {
-  //   if (!formEl) return
-  //   await formEl.validate((valid, fields) => {
-  //     if (valid) {
-  //       const permissionsMenu = JSON.stringify(treeRef.value.getCheckedKeys())
-  //     } else {
-  //       console.log(fields)
-  //     }
-  //   })
-  // }
 
   // //编辑表单
   // const handleClick = (data: any) => {
