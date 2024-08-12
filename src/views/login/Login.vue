@@ -36,19 +36,24 @@
 <!-- //--------------------------------------逻辑层 ---------------------------------------->
 <script setup lang="ts">
   import type { FormInstance, FormRules } from 'element-plus'
-  import { reactive, ref } from 'vue'
+  import { computed, reactive, ref, toRaw } from 'vue'
   import api from '../../api/loginApi'
+  import menuApi from '../../api/menuApi'
   import store from '../../utils/stroage'
   import { useRouter } from 'vue-router'
+  import { useStore } from 'vuex'
   const loginImg = new URL(`../../../public/login-head.png`, import.meta.url).href
 
   //路由跳转
   const router = useRouter()
+  //vuex
+  const stores = useStore()
+  const routerList = computed(() => stores.state.menu.routeList)
 
   //表单数据
   const loginForm = reactive({
-    userName: '',
-    passWord: '',
+    userName: '17677172453',
+    passWord: '123123',
     validCode: ''
   })
 
@@ -105,7 +110,13 @@
                 ElMessage.success('登录成功')
                 store.set('token', data.data.token)
                 store.set('userInfo', data.data.userInfo)
-                router.push('/')
+                menuApi.getPermissions().then(data => {
+                  stores.commit('updateRouteList', data)
+                  toRaw(routerList.value).forEach((item: any) => {
+                    router.addRoute('main', item)
+                  })
+                  router.push('/')
+                })
               }
             })
             .catch(error => {

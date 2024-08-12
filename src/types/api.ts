@@ -48,6 +48,20 @@ export namespace Menu {
     permission: []
     permissionName: string
   }
+  export interface PermissionParams {
+    children?: PermissionParams[]
+    component?: string
+    meta: MetaParams
+    name: string
+    path: string
+  }
+  export interface MetaParams {
+    describe?: string
+    icon: string
+    id?: string
+    name: string
+    path: string
+  }
 }
 
 //账号管理

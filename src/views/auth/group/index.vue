@@ -1,8 +1,8 @@
 <template>
   <div class="group-container">
     <PanelHead>
-      <template #header>菜单管理</template>
-      <template #content>菜单规则通常对应一个控制器的方法,同时菜单栏数据也从规则中获取</template>
+      <template #header>{{ route.meta.name }}</template>
+      <template #content>{{ route.meta.describe }}</template>
     </PanelHead>
     <div class="group-content">
       <el-button type="primary" @click="visible = true">+增加</el-button>
@@ -64,11 +64,15 @@
   import { Menu, Pagination } from '../../../types/api'
   import api from '../../../api/menuApi'
   import { FormInstance, FormRules } from 'element-plus'
+  import { useRoute } from 'vue-router'
 
   onMounted(() => {
     getMenuSelect()
     getMenuList()
   })
+
+  //获取路由数据
+  const route = useRoute()
 
   //新增弹窗开关
   const visible = ref(false)

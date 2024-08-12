@@ -2,10 +2,19 @@ import { createApp } from 'vue'
 import './style.less'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+import store from './store/index.ts'
 import { default as stores } from './utils/stroage.ts'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import PanelHead from './components/PanelHead.vue'
+
+const menuAside = stores.get('menuAside')
+if (menuAside) {
+  store.commit('updateRouteList', menuAside.menu.routeList)
+  const states = store.state as any
+  states.menu.routeList.forEach((item: any) => {
+    router.addRoute('main', item)
+  })
+}
 
 router.beforeEach(to => {
   const token = stores.get('token')

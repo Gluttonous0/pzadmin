@@ -4,7 +4,7 @@
     active-text-color="#ffd04b"
     background-color="#545c64"
     class="aside-container"
-    default-active="2"
+    :default-active="active"
     text-color="#fff"
     @open="handleOpen"
     @close="handleClose"
@@ -16,45 +16,46 @@
 </template>
 
 <script setup lang="ts">
-export interface asideTrees {
-  name?: string
-  children?: []
-  path: string
-  component: any
-  meta: {
-    describe: string
-    icon: string
-    id: string
+  export interface asideTrees {
+    name?: string
+    children?: []
     path: string
-    name: string
+    component: any
+    meta: {
+      describe: string
+      icon: string
+      id: string
+      path: string
+      name: string
+    }
   }
-}
-import { useRouter } from 'vue-router'
-import TreeMenu from './TreeMenu.vue'
-import { computed, reactive } from 'vue'
-import { useStore } from 'vuex'
-const router = useRouter() //获取路由信息
-const asideTree = reactive(router.options.routes[0].children as asideTrees[]) //
-const handleOpen = () => {}
-const handleClose = () => {}
 
-//获取vuex值
-const store = useStore()
-const iscollapse = computed(() => {
-  return store.state.menu.isCollapse
-})
-console.log()
+  import TreeMenu from './TreeMenu.vue'
+  import { computed } from 'vue'
+  import { useStore } from 'vuex'
+
+  const handleOpen = () => {}
+  const handleClose = () => {}
+
+  //获取vuex值
+  const store = useStore()
+  const asideTree = computed(() => store.state.menu.routeList)
+  const iscollapse = computed(() => {
+    return store.state.menu.isCollapse
+  })
+
+  const active = computed(() => store.state.menu.asideIndex)
 </script>
 
 <style scoped lang="less">
-.aside-container {
-  height: 100vh;
-  .aside-title {
-    height: 50px;
-    font-size: 20px;
-    line-height: 50px;
-    text-align: center;
-    color: #fff;
+  .aside-container {
+    height: 100vh;
+    .aside-title {
+      height: 50px;
+      font-size: 20px;
+      line-height: 50px;
+      text-align: center;
+      color: #fff;
+    }
   }
-}
 </style>

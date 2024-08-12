@@ -9,7 +9,11 @@
       <span>{{ item.meta.name }}</span>
     </el-menu-item>
 
-    <el-sub-menu v-else :index="`${props.index}-${item.meta.id}`">
+    <el-sub-menu
+      v-else
+      :index="`${props.index}-${item.meta.id}`"
+      @click="$emit('handleClicks', item, `${props.index}-${item.meta.id}`)"
+    >
       <template #title>
         <el-icon size="20"><component :is="item.meta.icon"></component></el-icon>
         <span>{{ item.meta.name }}</span>
@@ -20,17 +24,18 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { asideTrees } from './Aside.vue'
-import { useStore } from 'vuex'
+  import { useStore } from 'vuex'
+  import { useRouter } from 'vue-router'
+  import { asideTrees } from './Aside.vue'
+  import { computed } from 'vue'
 
-const props = defineProps(['menuData', 'index'])
-const router = useRouter()
-const store = useStore()
-//点击跳转菜单
-const handleChick = (item: asideTrees, active: string) => {
-  console.log()
-  store.commit('addTabMenu', item.meta)
-  router.push(item.meta.path)
-}
+  const store = useStore()
+  const props = defineProps(['menuData', 'index'])
+  const router = useRouter()
+  //点击跳转菜单
+  const handleChick = (item: asideTrees, active: string) => {
+    store.commit('updateAsideIndex', active)
+    store.commit('addTabMenu', item.meta)
+    router.push(item.meta.path)
+  }
 </script>

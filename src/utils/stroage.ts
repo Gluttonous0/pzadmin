@@ -4,7 +4,7 @@
 
 const store = {
   //储存缓存
-  set(key: string, value: string) {
+  set(key: string, value: any) {
     localStorage.setItem(key, JSON.stringify(value))
   },
 

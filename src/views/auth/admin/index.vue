@@ -1,8 +1,8 @@
 <template>
   <div class="group-container">
     <PanelHead>
-      <template #header>账号管理</template>
-      <template #content>管理员可以进行编辑，权限修改后需要登出才会生效</template>
+      <template #header>{{ route.meta.name }}</template>
+      <template #content>{{ route.meta.describe }}</template>
     </PanelHead>
     <div class="group-content">
       <!-- <el-button type="primary" @click="visible = true">+增加</el-button> -->
@@ -37,13 +37,13 @@
       <!-- table列表start -->
       <el-table :data="tableData.list" stripe style="width: 100%">
         <el-table-column prop="id" label="id" width="100" />
-        <el-table-column prop="name" label="昵称" width="180" />
-        <el-table-column prop="permissions_id" label="所属组别" width="180">
+        <el-table-column prop="name" label="昵称" width="100" />
+        <el-table-column prop="permissions_id" label="所属组别" width="100">
           <template #default="scope">
             {{ adminName(scope.row.permissions_id) }}
           </template>
         </el-table-column>
-        <el-table-column prop="mobile" label="手机号" width="180" />
+        <el-table-column prop="mobile" label="手机号" width="130" />
         <el-table-column prop="active" label="状态" width="100">
           <template #default="scope">
             <el-tag :type="scope.row.active === 1 ? 'success' : 'danger'">{{
@@ -57,7 +57,7 @@
             {{ formatData(scope.row.create_time) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180">
+        <el-table-column label="操作" width="100">
           <template #default="scoped">
             <el-button link type="primary" @click="handleVisible(scoped.row)">编辑</el-button>
           </template>
@@ -89,11 +89,15 @@
   import api from '../../../api/userApi'
   import { formatData } from '../../../utils'
   import { FormInstance, FormRules } from 'element-plus'
+  import { useRoute } from 'vue-router'
 
   onMounted(() => {
     getAdminList()
     getSelectAdmin()
   })
+
+  //获取路由数据
+  const route = useRoute()
 
   //获取账号列表
   const getAdminList = async () => {
@@ -111,8 +115,7 @@
 
   //角色身份转换方法
   const adminName = (scope: any) => {
-    if (!scope) return
-    debugger
+    if (!scope && scope != 0) return '-'
     return admins.value?.filter(item => item.id === scope)[0].name
   }
 
@@ -158,10 +161,8 @@
   })
 
   //关闭弹窗
-  const closeVisible = (formEl?: FormInstance) => {
+  const closeVisible = () => {
     visible.value = false
-    if (!formEl) return
-    formEl.resetFields()
   }
 
   //创建表单实例

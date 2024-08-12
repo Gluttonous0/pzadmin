@@ -36,6 +36,7 @@ http.interceptors.response.use(
     if (data.code === -2) {
       store.remove('token')
       store.remove('userInfo')
+      store.remove('menuAside')
       window.location.href = window.location.origin + '/'
     }
     if (data.data.token) {

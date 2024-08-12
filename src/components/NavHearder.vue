@@ -36,115 +36,115 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useStore } from 'vuex'
-import { asideTrees } from './Aside.vue'
-import { default as stores } from '../utils/stroage.ts'
+  import { computed } from 'vue'
+  import { useRoute, useRouter } from 'vue-router'
+  import { useStore } from 'vuex'
+  import { asideTrees } from './Aside.vue'
+  import { default as stores } from '../utils/stroage.ts'
 
-//获取路由实例
-const route = useRoute()
-const router = useRouter()
+  //获取路由实例
+  const route = useRoute()
+  const router = useRouter()
 
-//获取store实例
-const store = useStore()
-const selectMenu = computed(() => {
-  return store.state.menu.selectMenu
-})
+  //获取store实例
+  const store = useStore()
+  const selectMenu = computed(() => {
+    return store.state.menu.selectMenu
+  })
 
-//获取用户登录信息缓存
-const userInfo = stores.get('userInfo')
+  //获取用户登录信息缓存
+  const userInfo = stores.get('userInfo')
 
-//点击关闭tab
-const closeTab = (item: asideTrees, index: number) => {
-  console.log('before', index)
-
-  store.commit('closeTab', item)
-  //非当前页面tag
-  if (item.path !== route.path) {
-    return
-  }
-
-  //删除最后一项
-  const selectMenuData = selectMenu.value
-  if (index === selectMenuData.length) {
-    //tag只有一个
-    if (!selectMenuData.length) {
-      router.push('/')
-    } else {
-      router.push({ path: selectMenuData[index - 1].path })
+  //点击关闭tab
+  const closeTab = (item: asideTrees, index: number) => {
+    store.commit('closeTab', item)
+    //非当前页面tag
+    if (item.path !== route.path) {
+      return
     }
-  } else {
-    router.push({ path: selectMenuData[index].path })
-  }
-}
 
-//退出登录跳转
-const exitLogin = () => {
-  stores.remove('token')
-  stores.remove('userInfo')
-  router.push('/login')
-}
+    //删除最后一项
+    const selectMenuData = selectMenu.value
+    if (index === selectMenuData.length) {
+      //tag只有一个
+      console.log(selectMenuData)
+      if (!selectMenuData.length) {
+        router.push('/')
+      } else {
+        router.push({ path: selectMenuData[index - 1].path })
+      }
+    } else {
+      router.push({ path: selectMenuData[index].path })
+    }
+  }
+
+  //退出登录跳转
+  const exitLogin = () => {
+    stores.remove('token')
+    stores.remove('userInfo')
+    stores.remove('menuAside')
+    router.push('/login')
+  }
 </script>
 
 <style scoped lang="less">
-.flex-box {
-  display: flex;
-  align-items: center;
-}
-.nav-header {
-  height: 45px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #fff;
-  .nav-left {
-    height: 100%;
-    cursor: pointer;
-    .icon {
-      width: 45px;
+  .flex-box {
+    display: flex;
+    align-items: center;
+  }
+  .nav-header {
+    height: 45px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    .nav-left {
       height: 100%;
-    }
-    .icon:hover {
-      background-color: #ccc;
-    }
-    .tab {
-      padding: 0 10px;
-      height: 100%;
-      .icon-close {
-        width: 30px;
+      cursor: pointer;
+      .icon {
+        width: 45px;
         height: 100%;
       }
-      .text {
-        margin: 0 5px;
-        color: #000;
+      .icon:hover {
+        background-color: #ccc;
       }
-      &.selected {
-        a {
-          color: #409eff;
+      .tab {
+        padding: 0 10px;
+        height: 100%;
+        .icon-close {
+          width: 30px;
+          height: 100%;
         }
-        i {
-          color: #409eff;
+        .text {
+          margin: 0 5px;
+          color: #000;
         }
-        background-color: #f5f5f5;
+        &.selected {
+          a {
+            color: #409eff;
+          }
+          i {
+            color: #409eff;
+          }
+          background-color: #f5f5f5;
+        }
+      }
+      .tab:hover {
+        background-color: #ccc;
       }
     }
-    .tab:hover {
-      background-color: #ccc;
-    }
-  }
 
-  .nav-right {
-    display: flex;
-    .nav-admin {
-      display: inline-block;
-      line-height: 45px;
-    }
-    .nav-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+    .nav-right {
+      display: flex;
+      .nav-admin {
+        display: inline-block;
+        line-height: 45px;
+      }
+      .nav-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
     }
   }
-}
 </style>
