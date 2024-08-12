@@ -190,24 +190,6 @@
       }
     })
   }
-
-  // //表单权限列表
-  // const permissionsList = ref<Menu.MenuSelectItem[]>([])
-
-  // //获取树形表单实例
-  // const treeRef = ref()
-
-  // const defaultKeys = [4, 5]
-
-  // //编辑表单
-  // const handleClick = (data: any) => {
-  //   console.log(data)
-  //   visible.value = true
-  //   nextTick(() => {
-  //     Object.assign(form, { id: data.id, name: data.name })
-  //     treeRef.value.setCheckedKeys(data.permission)
-  //   })
-  // }
 </script>
 
 <style lang="less" scoped>
