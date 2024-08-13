@@ -104,9 +104,7 @@
           api
             .loginIn(loginForm)
             .then((data: any) => {
-              console.log(data)
               if (data.code === 10000) {
-                console.log(data)
                 ElMessage.success('登录成功')
                 store.set('token', data.data.token)
                 store.set('userInfo', data.data.userInfo)

@@ -146,7 +146,6 @@
   //打开弹窗
   const handleVisible = (val: User.Params) => {
     visible.value = true
-    console.log(val)
     nextTick(() => {
       Object.assign(form, { id: val.id, name: val.name, mobile: val.mobile, permissions_id: val.permissions_id })
     })

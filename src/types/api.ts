@@ -86,14 +86,21 @@ export namespace User {
 
 //陪护师
 export namespace Staff {
-  export interface Params {
+  export interface Params extends CreateParams {
     create_time: number
-    id: number
+  }
+  export interface CreateParams {
+    id: string
     name: string
     mobile: string
     avatar: string
     sex: string
     age: number
     active: number
+  }
+  //陪护师照片
+  export interface PhotoList {
+    name: string
+    url: string
   }
 }
