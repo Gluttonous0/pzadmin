@@ -83,3 +83,17 @@ export namespace User {
     name: string
   }
 }
+
+//陪护师
+export namespace Staff {
+  export interface Params {
+    create_time: number
+    id: number
+    name: string
+    mobile: string
+    avatar: string
+    sex: string
+    age: number
+    active: number
+  }
+}
