@@ -91,7 +91,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="sex" label="性别" width="100">
-          <template #default="scope"> </template>
+          <template #default="scope">
+            {{ scope.row.sex === '1' ? '男' : '女' }}
+          </template>
         </el-table-column>
         <el-table-column prop="mobile" label="手机号" width="130" />
         <el-table-column prop="active" label="状态" width="100">
@@ -266,7 +268,6 @@
   const openImg = async () => {
     await api.getPhotoList().then(data => {
       imgList.value = data
-      console.log('imgList', imgList)
       visibleImg.value = true
     })
   }

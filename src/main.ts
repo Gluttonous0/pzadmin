@@ -18,6 +18,7 @@ if (menuAside) {
 
 router.beforeEach((to, from) => {
   const token = stores.get('token')
+  console.log('main', from.name)
 
   //非登录页面判断
   if (!token && to.path !== '/login') {
