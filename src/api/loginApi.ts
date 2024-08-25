@@ -13,6 +13,10 @@ const api = {
   //登录接口
   loginIn(params: Login.CreateParams) {
     return request.post('/login', params)
+  },
+  //首页数据
+  getReport() {
+    return request.get<Login.UserInfo>('/report')
   }
 }
 

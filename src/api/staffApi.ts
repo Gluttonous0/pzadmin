@@ -1,4 +1,4 @@
-import { Pagination, Results, Staff } from '../types/api'
+import { Order, Pagination, Result, Results, Staff } from '../types/api'
 import request from '../utils/request'
 
 const api = {
@@ -17,6 +17,14 @@ const api = {
   //陪护师删除
   deleteCompanion(params: Staff.Params[]) {
     return request.post('/delete/companion', { id: params })
+  },
+  //订单列表获取
+  getOrderList(params: Order.OrderSearch) {
+    return request.get<Results<Order.Params>>('/admin/order', params)
+  },
+  //更新订单状态
+  updateOrder(id: string) {
+    return request.post('/update/order', { id })
   }
 }
 export default api

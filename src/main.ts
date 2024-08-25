@@ -18,11 +18,9 @@ if (menuAside) {
 
 router.beforeEach((to, from) => {
   const token = stores.get('token')
-  console.log('main', from.name)
-
   //非登录页面判断
   if (!token && to.path !== '/login') {
-    if (from.name) {
+    if (from.matched.length > 0) {
       ElMessage.error('登录过期,请重新登陆')
     }
     return '/login'

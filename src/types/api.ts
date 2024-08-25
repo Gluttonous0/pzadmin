@@ -26,6 +26,27 @@ export namespace Login {
   export interface Authentication extends CreateParams {
     validCode: string
   }
+  export interface TypeList {
+    date: string
+    order_money: number
+    order_sum: number
+  }
+  export interface Types {
+    num: number
+    state: string
+  }
+  export interface User {
+    ip: string
+    permission: string
+    user_img: string
+    user_name: string
+  }
+
+  export interface UserInfo {
+    typeList: TypeList[]
+    types: Types[]
+    user: User
+  }
 }
 
 //菜单管理
@@ -102,5 +123,47 @@ export namespace Staff {
   export interface PhotoList {
     name: string
     url: string
+  }
+}
+
+export namespace Order {
+  export interface OrderDetail {
+    companion_id: number
+    demand: string
+    hospital_id: number
+    hospital_name: string
+    order_start_time: number
+    out_trade_no: string
+    paidPrice: string
+    price: string
+    receiveAddress: string
+    serviceImg: string
+    service_name: string
+    service_state: string
+    starttime: string
+    tel: string
+    time_end: string
+    trade_state: string
+    transaction_id: string
+    user_id: string
+    code_url: string
+    client: {
+      id: number
+      mobile: string
+      name: string
+    }
+  }
+  export interface Params extends OrderDetail {
+    companion: {
+      age: number
+      avatar: string
+      id: number
+      mobile: string
+      name: string
+      sex: string
+    }
+  }
+  export interface OrderSearch extends Pagination {
+    out_trade_no?: string
   }
 }
